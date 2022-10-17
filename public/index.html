@@ -6,13 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ToDo App</title>
     <script src="dist/index.js" type="module"></script>
-    <style></style>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <ul id="list"></ul>
-    <form id="new-task-form">
-      <input type="text" id="new-task-title" />
-      <button type="submit">Add task</button>
-    </form>
+    <main class="main">
+      <header class="header">
+        <h1>To Do App</h1>
+      </header>
+      <section class="todo-container">
+        <form id="new-task-form">
+          <input type="textbox" id="new-task-title" autocomplete="off" />
+          <button type="submit">Add task</button>
+        </form>
+        <ul id="list">
+          <li id="reference-li"></li>
+        </ul>
+      </section>
+    </main>
   </body>
 </html>

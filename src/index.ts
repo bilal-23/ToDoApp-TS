@@ -10,7 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 const list = document.querySelector<HTMLUListElement>('#list')
 const form = document.querySelector('#new-task-form') as HTMLFormElement;
-const input = document.querySelector('#new-task-title') as HTMLInputElement
+const input = document.querySelector('#new-task-title') as HTMLInputElement;
+const referenceLi = document.querySelector("#reference-li") as HTMLLIElement;
 
 
 let tasksList: Task[] = JSON.parse(localStorage.getItem("tasksList")!)
@@ -19,7 +20,7 @@ if (tasksList === null) {
 }
 
 function saveTasks(task: Task): void {
-  tasksList.push(task);
+  tasksList.unshift(task);
   localStorage.setItem("tasksList", JSON.stringify(tasksList));
 }
 
@@ -47,30 +48,35 @@ function addListItem(task: Task): void {
   checkbox.type = "checkbox";
   //append works for node objects and DOMStirngs unlike appendChild which only works for node objects
   checkbox.checked = task.completed;
-  label.append(checkbox, task.title);
-  item.appendChild(label);
-  item?.setAttribute("id", task.id);
-  list?.appendChild(item);
+  checkbox.name = `${task.id}`
+  checkbox.id = `${task.id}`
+  label.htmlFor = `${task.id}`;
+  label.textContent = task.title;
+  item.appendChild(checkbox);
+  item.appendChild(label)
+  //  render li elemets inside ul in reverse order
+
+  referenceLi?.insertAdjacentElement("afterend", item);
+
+  checkbox.addEventListener("change", checkBoxHandler);
 }
 
-function checkBoxHandler(event: Event): void {
-  const elem = event.target as HTMLElement;
-  let liElement: HTMLLIElement
-  liElement = elem.closest("li") as HTMLLIElement;
-  const id = liElement.getAttribute("id");
+function checkBoxHandler(e: Event): void {
+  const elem = e.target as HTMLInputElement;
+  const id = elem.id;
   if (id) {
     completeTask(id);
   }
 }
 
 function completeTask(id: string): void {
+  console.log("working");
   const tempList = [...tasksList];
   const index = tempList.findIndex((item) => item.id === id);
-  tempList[index].completed = true;
+  tempList[index].completed = !tempList[index].completed;
   localStorage.setItem("tasksList", JSON.stringify(tempList));
 }
 
-list?.addEventListener("click", checkBoxHandler);
 
 form?.addEventListener("submit", formSubmitHandler);
 
